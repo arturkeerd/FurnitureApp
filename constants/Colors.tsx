@@ -7,6 +7,7 @@ const Colors = {
     white: '#FFFFFF',
     grey: '#606060',
     lightGrey: "#C5C5C5",
+    extraLightGrey: "#eaeaea8f",
     inactiveButton: "#F5F5F5"
 };
 export default Colors;

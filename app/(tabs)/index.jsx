@@ -29,7 +29,7 @@ export default function HomeScreen() {
         <View style={styles.nonImage}>
           <View style={styles.text}>
             <MainText type="title" style={styles.centerText}>You'll Find</MainText>
-            <MainText type="orange" style={styles.centerText}>All you need</MainText>
+            <MainText type="orange" style={[styles.centerText, styles.underLine]}>All you need</MainText>
             <MainText type="title" style={styles.centerText}>Here!</MainText>
           </View>
             <Pressable onPress={signUp}>
@@ -74,6 +74,9 @@ const styles = StyleSheet.create({
   },
   centerText: {
     textAlign: 'center',
+  },
+  underLine: {
+    textDecorationLine: 'underline',
   },
 
 });

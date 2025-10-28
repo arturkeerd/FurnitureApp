@@ -17,7 +17,7 @@ export default function signIn() {
     const signIn = () => {
       console.log("Email:", email);
       console.log("Password:", password);
-    router.push ("/auth/SignIn");
+    router.push ("/home/Home");
   }
     const google = () => {
     router.push ("/");
