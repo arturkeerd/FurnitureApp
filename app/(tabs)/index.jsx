@@ -1,8 +1,8 @@
 import { Image } from 'expo-image';
 import { StyleSheet, View, Pressable } from 'react-native';
-import MainView from '@/constants/main-view';
-import MainText from '@/constants/main-text';
-import MainButton from '@/components/ui/mainbutton'
+import MainView from '@/constants/MainView';
+import MainText from '@/constants/MainText';
+import MainButton from '@/components/ui/MainButton'
 import { useRouter} from 'expo-router';
 
 export default function HomeScreen() {
@@ -11,13 +11,13 @@ export default function HomeScreen() {
     router.push ("/");
   }
     const signIn = () => {
-    router.push ("/auth/sign-in");
+    router.push ("/auth/SignIn");
   }
     const google = () => {
     router.push ("/");
   }
     const signUp = () => {
-    router.push ("/auth/sign-up");
+    router.push ("/auth/SignUp");
   }
 
   return (
@@ -36,7 +36,15 @@ export default function HomeScreen() {
               <MainButton type="mainbutton">Sign Up</MainButton>
             </Pressable>
             <Pressable onPress={signIn}>
-              <MainButton type="mainbutton" style={{ color: '#4F63AC', backgroundColor: '#fff' }}>Sign In</MainButton>
+              <MainButton type="mainbutton" style={{ 
+                font: '#4F63AC', 
+                backgroundColor: '#fff' }}
+            textStyle={{
+              color: '#4F63AC',
+              fontWeight: 'bold',
+              fontSize: 16,
+            }}
+              >Sign In</MainButton>
             </Pressable>
         </View>    
     </MainView>

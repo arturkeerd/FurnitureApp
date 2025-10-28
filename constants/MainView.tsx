@@ -1,21 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import React, {ReactNode} from 'react';
+import { ViewStyle, StyleProp, Text, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type MainViewProps = {
-  showHeader?: boolean;
+  header?: ReactNode;
   backgroundColor?: string;
   headerImage?: React.ReactNode;
   children?: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 };
 
-const MainView = ({ showHeader = true, children, ...props }) => {
+const MainView: React.FC<MainViewProps> = ({
+  header,
+  style,
+  contentStyle,
+  children,
+}) => {
   return (
-    <SafeAreaView style={styles.container}>
-      {showHeader ? (
-        <View style={styles.header}>{/* header content */}</View>
-      ) : null}
-      <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
+    <SafeAreaView style={[styles.container, style]}>
+      {header}
+      <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
+        {children}
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -42,6 +49,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 24,
     gap: 16,
+    flexGrow: 1,
   },
 });
 

@@ -2,11 +2,11 @@
 import React from 'react';
 import { Text, StyleSheet, Platform, TextProps, TextStyle } from 'react-native';
 
-type MainTextKind = 'default' | 'title' | 'orange' | 'subtitle' | 'mainbutton' | 'formlabel' ;
+type MainTextKind = 'default' | 'title' | 'orange' | 'subtitle' | 'mainbutton' | 'formlabel' | 'link' ;
 
 type MainTextProps = TextProps & {
   children: React.ReactNode;
-  type?: MainTextKind;        // <-- use this in your JSX: <MainText type="title">...</MainText>
+  type?: MainTextKind;
   style?: TextStyle | TextStyle[];
 };
 
@@ -78,6 +78,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: '#4F63AC',
+  },
+  link: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#0C7DBF',
   },
 });
 
