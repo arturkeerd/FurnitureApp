@@ -8,6 +8,7 @@ import { products } from "@/data/Products";
 import ProductHomeItem from "@/components/ui/ProductHomeItem";
 import Footer from "@/components/ui/Footer";
 import MainView from "@/constants/MainView";
+import ProductDetail from "./ProductDetail";
 
 
 const { width, height } = Dimensions.get('window');
@@ -27,12 +28,14 @@ interface Product {
   image: string;
   category: number;
   price: string;
+  description: string;
 }
 
 const Home = ({ navigation }: any) => {
   // Start with Popular selected (first category)
   const [selectedCategory, setSelectedCategory] = useState<any>(categories[0]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [keyword, setKeyword] = useState<string>("");
 
   console.log("Home - Selected category:", selectedCategory);
@@ -72,20 +75,26 @@ const Home = ({ navigation }: any) => {
     );
   };
 
-  const renderProductItem = ({ item }: { item: Product }) => {
-    return (
-      <ProductHomeItem
-        title={item.title}
-        price={item.price}
-        imageUrl={item.image}
-        onPress={() => {
-          
-        }}
-      />
-    );
-  };
-
+const renderProductItem = ({ item }: { item: Product }) => {
   return (
+    <ProductHomeItem
+      title={item.title}
+      price={item.price}
+      imageUrl={item.image}
+      onPress={() => setSelectedProduct(item)} // back to home
+    />
+  );
+};
+
+return selectedProduct ? (
+  <ProductDetail
+    image={selectedProduct.image}
+    title={selectedProduct.title}
+    price={selectedProduct.price}
+    description={selectedProduct.description}
+    onBack={() => setSelectedProduct(null)} // back to home
+  />
+) : (
   <MainView
     header={
       <Header
@@ -95,8 +104,8 @@ const Home = ({ navigation }: any) => {
         setKeyword={setKeyword}
       />
     }
-    footer={<Footer />}   // ⬅️ footer goes here
-    scroll={false}        // ⬅️ important for FlatList screens
+    footer={<Footer />}
+    scroll={false}
   >
     <FlatList
       data={categories as Category[]}

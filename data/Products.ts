@@ -2,6 +2,7 @@ export const products = [
   {
     id: 1,
     title: "Bar Chair",
+    description: "Bar Chair features a sleek chrome base combined with soft leather padding for maximum comfort. Designed with modern simplicity, it fits beautifully in any kitchen or bar space. Available in multiple finishes to match your interior.",
     image: require('@/assets/images/barchair.png'),
     category: 1,
     price: "$ 120.00",
@@ -9,6 +10,7 @@ export const products = [
   {
     id: 2,
     title: "Modern Mini Table",
+    description: "Modern Mini Table is crafted with high-quality materials and a clean, rounded shape. Its minimal design makes it perfect for small living rooms or reading corners. Light, sturdy, and elegant for everyday use.",
     image: require('@/assets/images/table1.png'),
     category: 2,
     price: "$ 90.00",
@@ -16,6 +18,7 @@ export const products = [
   {
     id: 3,
     title: "Modern Armchair",
+    description: "Modern Armchair combines comfort and style with its textured fabric and strong steel legs. Its minimal curves bring warmth to any interior. Available in neutral tones that complement every room decor.",
     image: require('@/assets/images/armchair1.png'),
     category: 3,
     price: "$ 130.00",
@@ -23,6 +26,7 @@ export const products = [
   {
     id: 4,
     title: "Velvet Armchair",
+    description: "Velvet Armchair is designed with soft velvet upholstery and a gently curved backrest for luxurious comfort. It blends classic charm with modern elegance, making it a centerpiece for any living room.",
     image: require('@/assets/images/armchair2.png'),
     category: 3,
     price: "$ 145.00",
@@ -30,6 +34,7 @@ export const products = [
   {
     id: 5,
     title: "Cotton King Bed",
+    description: "Cotton King Bed offers a premium sleep experience with its upholstered frame and soft cotton headboard. Its clean lines and neutral colors create a calm, modern bedroom atmosphere suited for every home.",
     image: require('@/assets/images/bed1.png'),
     images: [
       require('@/assets/images/bed2.png'),

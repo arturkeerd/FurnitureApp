@@ -23,8 +23,8 @@ export default function Footer() {
                 style={styles.home}
                 source={
                     activePage === "Home"
-                    ? require("../../assets/images/home-active.png")
-                    : require("../../assets/images/home.png")}
+                    ? require("@/assets/images/home-active.png")
+                    : require("@/assets/images/home.png")}
             />
             </Pressable>
             <Pressable hitSlop={20} onPress={handleFavourites}>
@@ -32,8 +32,8 @@ export default function Footer() {
                 style={styles.favourites}
                 source={
                     activePage === "Favourites"
-                    ? require("../../assets/images/favourites-active.png")
-                    : require("../../assets/images/favourites.png")}
+                    ? require("@/assets/images/favourites-active.png")
+                    : require("@/assets/images/favourites.png")}
             />
             </Pressable>
             <Pressable hitSlop={20} onPress={handleUser}>
@@ -41,8 +41,8 @@ export default function Footer() {
                 style={styles.user}
                 source={
                     activePage === "Profile"
-                    ? require("../../assets/images/user-active.png")
-                    : require("../../assets/images/user.png")}
+                    ? require("@/assets/images/user-active.png")
+                    : require("@/assets/images/user.png")}
             />
             </Pressable>
         </View>
