@@ -7,6 +7,7 @@ import { categories } from "@/data/Categories";
 import { products } from "@/data/Products";
 import ProductHomeItem from "@/components/ui/ProductHomeItem";
 import Footer from "@/components/ui/Footer";
+import MainView from "@/constants/MainView";
 
 
 const { width, height } = Dimensions.get('window');
@@ -85,42 +86,45 @@ const Home = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+  <MainView
+    header={
       <Header
-        showSearch={true}
+        showSearch
         title="Find All You Need"
         keyword={keyword}
         setKeyword={setKeyword}
       />
+    }
+    footer={<Footer />}   // ⬅️ footer goes here
+    scroll={false}        // ⬅️ important for FlatList screens
+  >
+    <FlatList
+      data={categories as Category[]}
+      renderItem={renderCategoryItem}
+      keyExtractor={(item) => (item.id != null ? String(item.id) : item.title)}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.categoriesList}
+      keyboardShouldPersistTaps="handled"
+      extraData={selectedCategory}
+    />
 
-      <FlatList
-        data={categories as Category[]}
-        renderItem={renderCategoryItem}
-        keyExtractor={(item) =>
-          item.id != null ? String(item.id) : item.title
-        }
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.categoriesList}
-        keyboardShouldPersistTaps="handled"
-        extraData={selectedCategory}
-      />
-
-      <FlatList
-        key={selectedCategory?.id || selectedCategory?.title || "all"}
-        data={filteredProducts}
-        renderItem={renderProductItem}
-        keyExtractor={(item) => String(item.id)}
-        numColumns={2}
-        contentContainerStyle={styles.productsList}
-        showsVerticalScrollIndicator={false}
-        ListFooterComponent={<View style={{ height: 100 }} />}
-        keyboardShouldPersistTaps="handled"
-        extraData={filteredProducts}
-      />
-      <Footer/>
-    </SafeAreaView>
-  );
+    <FlatList
+      key={selectedCategory?.id || selectedCategory?.title || "all"}
+      data={filteredProducts}
+      renderItem={renderProductItem}
+      keyExtractor={(item) => String(item.id)}
+      numColumns={2}
+      contentContainerStyle={styles.productsList}
+      showsVerticalScrollIndicator={false}
+      // add space so last row doesn't sit on top of the footer
+      ListFooterComponent={<View style={{ height: 100 }} />}
+      keyboardShouldPersistTaps="handled"
+      extraData={filteredProducts}
+      style={{ flex: 1 }}
+    />
+  </MainView>
+);
 };
 
 export default React.memo(Home);
@@ -137,7 +141,6 @@ const styles = StyleSheet.create({
   },
   productsList: {
     paddingHorizontal: 10,
-    paddingBottom: 20,
-    width: wp(10),
+    paddingBottom: 10,
   },
 });     

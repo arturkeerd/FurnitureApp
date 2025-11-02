@@ -3,18 +3,19 @@ import { View, Text, Button, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import Footer from "@/components/ui/Footer";
 import { SafeAreaView } from "react-native-safe-area-context";
+import MainView from "@/constants/MainView";
 
 export default function Placeholder() {
   const router = useRouter();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#fff" }}>
+    <MainView>
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Placeholder Page</Text>
             <Button title="Go Back" onPress={() => router.back()} />
         </SafeAreaView>
         <Footer/>
-    </View>
+    </MainView>
   );
 }
 

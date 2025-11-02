@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
     padding: 12,
     alignItems: "center",
     justifyContent: "center",
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
   },
   selectedContainer: {
     backgroundColor: Colors.lightGrey,
@@ -56,14 +56,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 14,
-    color: Colors.black,
+    color: Colors.lightGrey,
     marginTop: 6,
     textAlign: "center",
     width: 70,
-    marginBottom: 40,
   },
   selectedTitle: {
-    color: Colors.black,
+    color: Colors.blue,
     fontWeight: "600",
   },
 });

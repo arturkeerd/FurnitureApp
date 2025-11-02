@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 24,
-    marginTop: 60,
-    marginBottom: 20,
+    marginTop: 50,
+    marginBottom: 10,
   },
   title: {
     color: Colors.black,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   },
   space: { 
     width: 24, 
-    height: 50, 
+    height: 30, 
   },
   searchInput: {
     height: 40,

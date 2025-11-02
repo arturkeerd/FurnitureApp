@@ -1,9 +1,11 @@
 import React, {ReactNode} from 'react';
-import { ViewStyle, StyleProp, Text, StyleSheet, ScrollView } from 'react-native';
+import { ViewStyle, StyleProp, Text, StyleSheet, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type MainViewProps = {
   header?: ReactNode;
+  footer?: ReactNode;
+  scroll?: boolean;
   backgroundColor?: string;
   headerImage?: React.ReactNode;
   children?: React.ReactNode;
@@ -13,6 +15,8 @@ type MainViewProps = {
 
 const MainView: React.FC<MainViewProps> = ({
   header,
+  footer,
+  scroll = true,
   style,
   contentStyle,
   children,
@@ -20,9 +24,18 @@ const MainView: React.FC<MainViewProps> = ({
   return (
     <SafeAreaView style={[styles.container, style]}>
       {header}
-      <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
-        {children}
-      </ScrollView>
+      <View style={{ flex: 1 }}>
+        {scroll ? (
+        <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
+          {children}
+        </ScrollView>
+        ) : (
+        <View style={[styles.content, { flex: 1 }, contentStyle]}>
+          {children}
+        </View>
+        )}
+      </View>
+      {footer ?? null}
     </SafeAreaView>
   );
 };
@@ -47,21 +60,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 24,
-    gap: 16,
+    paddingLeft: 24,
+    paddingRight: 24,
+    gap: 6,
     flexGrow: 1,
   },
 });
 
-const Colors = {
-    background: '#FFFFFF',
-    blue: '#4F63AC',
-    orange: '#fca34d',
-    darkBlue: '#3f4a59',
-    black: '#303030',
-    white: '#FFFFFF',
-    grey: '#606060',
-    lightGrey: "#C5C5C5",
-    inactiveButton: "#F5F5F5"
-};
 export default MainView;

@@ -1,36 +1,32 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity, Dimensions, StyleSheet } from "react-native";
+import { View, Text, Image, TouchableOpacity, StyleSheet, useWindowDimensions, ImageSourcePropType } from "react-native";
 import Colors from "@/constants/Colors";
 
-const { width } = Dimensions.get("window");
-
-// 10px padding left + 10px padding right + 10px gap between columns = 30px total
-const HORIZONTAL_PADDING = 10;
-const GAP_BETWEEN_COLUMNS = 10;
-const ITEM_WIDTH = (width - HORIZONTAL_PADDING * 2 - GAP_BETWEEN_COLUMNS) / 2;
+const HORIZONTAL_PADDING = 30;
+const GAP_BETWEEN_COLUMNS = 30;
 
 type ProductHomeItemProps = {
   title: string;
   price: string;
-  imageUrl: string;
+  // allow both remote URLs and local require(...) assets
+  imageUrl: string | ImageSourcePropType;
   onPress: () => void;
 };
 
-const ProductHomeItem = ({
-  title,
-  price,
-  imageUrl,
-  onPress,
-}: ProductHomeItemProps) => {
+const ProductHomeItem = ({ title, price, imageUrl, onPress }: ProductHomeItemProps) => {
+  const { width } = useWindowDimensions();
+  const itemWidth = (width - HORIZONTAL_PADDING * 2 - GAP_BETWEEN_COLUMNS) / 2;
+
+  const source =
+    typeof imageUrl === "string"
+      ? { uri: imageUrl } // remote
+      : imageUrl;         // local require(...)
+
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={typeof imageUrl === "string" ? { uri: imageUrl } : imageUrl} style={styles.image} />
-      <Text style={styles.title} numberOfLines={2}>
-        {title}
-      </Text>
-      <Text style={styles.price} numberOfLines={1}>
-        {price}
-      </Text>
+    <TouchableOpacity style={[styles.container, { width: itemWidth }]} onPress={onPress}>
+      <Image source={source} style={[styles.image, { height: itemWidth }]} resizeMode="cover" />
+      <Text style={styles.title} numberOfLines={2}>{title}</Text>
+      <Text style={styles.price} numberOfLines={1}>{price}</Text>
     </TouchableOpacity>
   );
 };
@@ -39,17 +35,18 @@ export default React.memo(ProductHomeItem);
 
 const styles = StyleSheet.create({
   container: {
+    maxWidth: 200,
+    maxHeight: 250,
+    minHeight: 150,
     borderRadius: 12,
-    padding: 12,
+    marginRight: 20,
     marginBottom: 16,
-    width: ITEM_WIDTH,
     alignItems: "center",
   },
   image: {
     width: "100%",
-    height: ITEM_WIDTH,
+    maxHeight: 200,
     borderRadius: 8,
-    resizeMode: "cover",
     marginBottom: 8,
   },
   title: {
@@ -66,4 +63,4 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     marginLeft: 10,
   },
-}); 
+});
