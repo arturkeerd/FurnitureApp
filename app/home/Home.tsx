@@ -6,6 +6,8 @@ import CategoryBox from "@/components/ui/CategoryBox";
 import { categories } from "@/data/Categories";
 import { products } from "@/data/Products";
 import ProductHomeItem from "@/components/ui/ProductHomeItem";
+import Footer from "@/components/ui/Footer";
+
 
 const { width, height } = Dimensions.get('window');
 
@@ -116,6 +118,7 @@ const Home = ({ navigation }: any) => {
         keyboardShouldPersistTaps="handled"
         extraData={filteredProducts}
       />
+      <Footer/>
     </SafeAreaView>
   );
 };
