@@ -2,23 +2,23 @@ import React from "react";
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 
-type CategoryBoxProps = {
+interface CategoryBoxProps {
   title: string;
-  imageUrl: string;
-  isSelected?: boolean;
+  image: string;
+  isSelected: boolean;
   onPress: () => void;
-};
+}
 
 const CategoryBox = ({
   title,
-  imageUrl,
+  image,
   isSelected = false,
   onPress,
 }: CategoryBoxProps) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.wrapper}>
       <View style={[styles.container, isSelected && styles.selectedContainer]}>
-        <Image source={typeof imageUrl === "string" ? { uri: imageUrl } : imageUrl} style={styles.image} />
+        <Image source={typeof image === "string" ? { uri: image } : image} style={styles.image} />
       </View>
       <Text
         style={[styles.title, isSelected && styles.selectedTitle]}

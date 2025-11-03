@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Pressable, Image, Text, View, TextInput, StyleSheet } from "react-native";
-import Colors from "@/constants/Colors";
+import { Pressable, Image, Text, View, TextInput, StyleSheet, Platform, Alert } from "react-native";
+import Colors from "../../constants/Colors";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 interface HeaderProps {
   title: string;
@@ -39,6 +41,22 @@ const Header: React.FC<HeaderProps> = ({
       onSearch();
     }
   };
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      if (Platform.OS === "web") {
+        localStorage.removeItem("auth_token");
+      } else {
+        await SecureStore.deleteItemAsync("auth_token");
+      }
+
+      Alert.alert("Logged out", "You have been signed out.");
+      router.replace("/auth/SignIn");
+    } catch (err: any) {
+      Alert.alert("Error", err?.message ?? "Failed to log out.");
+    }
+  };
 
   return (
     <View>
@@ -64,9 +82,9 @@ const Header: React.FC<HeaderProps> = ({
         <Text style={styles.title}>{title}</Text>
 
         {showLogout ? (
-            <Pressable hitSlop={20} onPress={onLogout}>
+            <Pressable hitSlop={20} onPress={handleLogout}>
             <Image
-                style={styles.icon}
+                style={styles.logOut}
                 source={require("../../assets/images/logout.png")}
             />
             </Pressable>
@@ -113,6 +131,11 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
+  },
+  logOut: {
+    width: 24,
+    height: 24,
+    alignSelf: "center",
   },
   space: { 
     width: 24, 

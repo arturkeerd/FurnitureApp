@@ -5,6 +5,7 @@ import MainText from '@/constants/MainText';
 import MainButton from '@/components/ui/MainButton'
 import { useRouter} from 'expo-router';
 
+
 export default function HomeScreen() {
   const router = useRouter();
   const goBack = () => {

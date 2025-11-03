@@ -94,8 +94,8 @@ const styles = StyleSheet.create({
     },
     description: {
         height: 140,
-        fontSize: 14,
-        color: '#555',
+        fontSize: 16,
+        color: Colors.grey,
     },
     bottomButtons: {
         position: "absolute",

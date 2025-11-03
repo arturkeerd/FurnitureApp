@@ -4,12 +4,20 @@ import { useRouter } from "expo-router";
 import Footer from "@/components/ui/Footer";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MainView from "@/constants/MainView";
+import Header from "@/components/ui/Header";
 
 export default function Placeholder() {
   const router = useRouter();
 
   return (
-    <MainView>
+    <MainView
+      header={
+        <Header
+          title="Favourites"
+        />
+      }
+    scroll={false}
+    >
         <SafeAreaView style={styles.container}>
             <Text style={styles.title}>Placeholder Page</Text>
             <Button title="Go Back" onPress={() => router.back()} />

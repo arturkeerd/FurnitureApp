@@ -5,29 +5,72 @@ import MainView from '@/constants/MainView';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from 'react-native';
 import AuthHeader from '@/components/ui/AuthHeader';
+import * as SecureStore from "expo-secure-store";
+import { Alert } from "react-native";
+import { Platform } from "react-native";
 
-export default function signIn() {
+async function saveToken(token: string) {
+  try {
+    if (Platform.OS === "web") {
+      // Web fallback, since SecureStore doesn’t work in browsers
+      localStorage.setItem("auth_token", token);
+    } else {
+      await SecureStore.setItemAsync("auth_token", token);
+    }
+  } catch (e: any) {
+    console.warn("Token save failed:", e?.message);
+  }
+}
 
+export default function SignIn() {
   const router = useRouter();
-  const goBack = () => {
-    router.push ("/");
-  }
-    const signIn = () => {
-      console.log("Email:", email);
-      console.log("Password:", password);
-    router.push ("/home/Home");
-  }
-    const google = () => {
-    router.push ("/");
-  }
-    const signUp = () => {
-    router.push ("/auth/SignUp");
-  }
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:4000";
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert("Missing fields", "Please enter your email and password.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        const msg = data?.error || `Login failed (${res.status})`;
+        Alert.alert("Error", msg);
+        return;
+      }
+
+      // ✅ Save JWT securely
+      await saveToken(data.token);
+
+      console.log("Logged in:", data.user);
+      Alert.alert("Success", `Welcome back, ${data.user.name}!`);
+
+      // Navigate to home after login
+      router.replace("/home/Home");
+    } catch (err: any) {
+      Alert.alert("Network error", err?.message ?? "Could not reach server");
+    } finally {
+      setLoading(false);
+    }
+  };
+  const signUp = () => router.push("/auth/SignUp");
+  const goBack = () => router.push("/");
+  const google = () => {}; // wire later
 
   return (
     <MainView>
@@ -51,8 +94,10 @@ export default function signIn() {
                   isPasswordVisible={isPasswordVisible}
                   onEyePress={() => setIsPasswordVisible(!isPasswordVisible)}
                 />
-              <Pressable onPress={signIn}>
-                <MainButton style={{ marginTop: 40, marginBottom: 20, }}>Sign In</MainButton>
+              <Pressable onPress={handleLogin}>
+                <MainButton style={{ marginTop: 40, marginBottom: 20 }}>
+                  {loading ? "Signing in..." : "Sign In"}
+                </MainButton>
               </Pressable>
                 <View style={[styles.dividerContainer]}>
                   <View style={styles.dividerLine} />

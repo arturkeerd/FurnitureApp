@@ -57,17 +57,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     home: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 30,
         left: 20,
     },
     favourites: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 34,
     },
     user: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 30,
         right: 20,
     },
 });
