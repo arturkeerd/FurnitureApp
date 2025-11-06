@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { auth, AuthReq } from "../middleware/auth";
 import { User } from "../models/User";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
@@ -37,6 +38,12 @@ router.post("/login", async (req, res) => {
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
+});
+
+router.get("/me", auth, async (req: AuthReq, res) => {
+  const user = await User.findById(req.userId).select("_id name email");
+  if (!user) return res.status(404).json({ error: "User not found" });
+  res.json({ id: user._id.toString(), name: user.name, email: user.email });
 });
 
 export default router;

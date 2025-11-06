@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MainView from "@/constants/MainView";
 import Header from "@/components/ui/Header";
 
-export default function Placeholder() {
+export default function Favourites() {
   const router = useRouter();
 
   return (

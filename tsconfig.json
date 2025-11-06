@@ -16,7 +16,15 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "app",
+    "components",
+    "constants",
+    "hooks",
+    "utils",
+    "scripts",
+    "index.ts",
+    "index.tsx"
   ],
   "exclude": ["server"],
   "extends": "expo/tsconfig.base"

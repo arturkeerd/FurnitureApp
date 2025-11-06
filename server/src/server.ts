@@ -20,6 +20,7 @@ app.get("/health", (_req, res) => res.json({ ok: true }));
 
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
+app.use("/api/auth", authRouter);
 
 const PORT = Number(process.env.PORT ?? 4000);
 

@@ -1,7 +1,8 @@
 // app/(tabs)/Home.tsx
 import React, { useEffect, useState } from "react";
-import { FlatList, StyleSheet, Dimensions, Text } from "react-native";
+import { FlatList, StyleSheet, Dimensions, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 import Header from "@/components/ui/Header";
 import CategoryBox from "@/components/ui/CategoryBox";
@@ -10,10 +11,6 @@ import Footer from "@/components/ui/Footer";
 import MainView from "@/constants/MainView";
 import { categories } from "@/data/Categories";
 import { API_URL } from "@/constants/config";
-
-const { width, height } = Dimensions.get("window");
-export const wp = (pct: number) => (width * pct) / 100;
-export const hp = (pct: number) => (height * pct) / 100;
 
 // Use title-based key for categories (e.g., "Chair" -> "chair")
 const toCatKey = (s: string) => s.trim().toLowerCase();
@@ -38,6 +35,7 @@ const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   // Fetch Mongo items
   useEffect(() => {
@@ -114,7 +112,7 @@ const Home = () => {
         title={item.title}
         price={item.price}
         imageUrl={imageUrl}
-        onPress={() => console.log("Pressed:", item.title)}
+        onPress={() => router.push({ pathname: "/home/ProductDetail", params: { id: item.id } })}
       />
     );
   };
@@ -122,8 +120,8 @@ const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Furniture Store" />
-
       {/* Categories */}
+      <View >
       <FlatList
         horizontal
         data={categories as Category[]}
@@ -132,30 +130,48 @@ const Home = () => {
         contentContainerStyle={styles.categoryList}
         showsHorizontalScrollIndicator={false}
       />
+      </View>
 
       {loading && <Text style={styles.status}>Loading…</Text>}
       {!!error && <Text style={styles.status}>Error: {error}</Text>}
 
       {/* Products */}
-      <FlatList
-        data={filtered}
-        keyExtractor={(p) => p.id}
-        renderItem={renderProduct}
-        numColumns={2}
-        contentContainerStyle={styles.productGrid}
-        showsVerticalScrollIndicator={false}
-      />
-
+      
+        <FlatList
+          data={filtered}
+          keyExtractor={(p) => p.id}
+          renderItem={renderProduct}
+          numColumns={2}
+          contentContainerStyle={styles.productGrid}
+          showsVerticalScrollIndicator={false}
+        />
+      
       <Footer />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#ffffff" },
-  categoryList: { paddingVertical: 10, paddingHorizontal: 15 },
-  productGrid: { paddingHorizontal: 10, paddingBottom: 80 },
-  status: { paddingHorizontal: 16, paddingVertical: 6 },
+  container: { 
+    flex: 1,
+    backgroundColor: "#ffffff" 
+  },
+  categoryList: { 
+    
+    paddingVertical: 10, 
+    paddingHorizontal: 15 
+  },
+  productGrid: { 
+    gap: 20,
+    alignItems: "center",
+    justifyContent:"center",
+    paddingHorizontal: 10, 
+    paddingBottom: 80 
+  },
+  status: { 
+    paddingHorizontal: 16, 
+    paddingVertical: 6 
+  },
 });
 
 export default Home;

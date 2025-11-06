@@ -5,13 +5,14 @@ import MainView from '@/constants/MainView';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { GestureResponderEvent, Pressable, StyleSheet, Text, View } from 'react-native';
+import { GestureResponderEvent, Pressable, StyleSheet, Text, View, Alert , Platform } from 'react-native';
 import AuthHeader from '@/components/ui/AuthHeader';
 import * as SecureStore from "expo-secure-store";
-import { Alert } from "react-native";
-import { Platform } from "react-native";
+import { useUser } from "@/hooks/UserContext";
+import { saveToken } from "@/utils/token";           // use the shared util
+import { API_URL } from "@/constants/config";        
 
-async function saveToken(token: string) {
+/*async function saveToken(token: string) {
   try {
     if (Platform.OS === "web") {
       // Web fallback, since SecureStore doesn’t work in browsers
@@ -22,7 +23,7 @@ async function saveToken(token: string) {
   } catch (e: any) {
     console.warn("Token save failed:", e?.message);
   }
-}
+}*/
 
 export default function SignIn() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { refresh } = useUser();
 
   const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -56,6 +58,9 @@ export default function SignIn() {
 
       // ✅ Save JWT securely
       await saveToken(data.token);
+
+      // 2) Populate context by calling /api/auth/me
+      await refresh();
 
       console.log("Logged in:", data.user);
       Alert.alert("Success", `Welcome back, ${data.user.name}!`);

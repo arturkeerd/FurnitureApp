@@ -1,0 +1,52 @@
+import React from "react";
+import { TouchableOpacity, View, Text, StyleSheet } from "react-native";
+import Colors from "@/constants/Colors";
+
+type ProfileNavItemProps = {
+  title: string;
+  subtitle?: string;
+  onPress: () => void;
+};
+
+export default function ProfileNavButton({ title, subtitle, onPress }: ProfileNavItemProps) {
+  return (
+    <TouchableOpacity style={styles.card} activeOpacity={0.85} onPress={onPress}>
+      <View>
+        <Text style={styles.title}>{title}</Text>
+        {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+      </View>
+      <Text style={styles.chevron}>›</Text>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: "#fff",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 130,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2,
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: Colors.black ,
+  },
+  subtitle: {
+    marginTop: 4,
+    fontSize: 12,
+    color: Colors.grey ,
+  },
+  chevron: {
+    fontSize: 26,
+    lineHeight: 26,
+    color: Colors.grey ,
+  },
+});
