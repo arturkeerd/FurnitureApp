@@ -5,17 +5,20 @@ import { User } from "../models/User";
 
 const router = Router();
 
+//GET /api/items/  -- all items
 router.get("/", async (_req, res) => {
   const items = await Item.find().sort({ createdAt: -1 }).limit(100).lean();
   res.json(items);
 });
 
+//GET /api/items/:id  -- one item
 router.get("/:id", async (req, res) => {
   const item = await Item.findById(req.params.id).lean();
   if (!item) return res.status(404).json({ error: "Not found" });
   res.json(item);
 });
 
+//POST /api/items/  -- create item
 router.post("/", auth, async (req: AuthReq, res) => {
   try {
     console.log("CREATE /items body:", req.body);
@@ -49,6 +52,7 @@ router.post("/", auth, async (req: AuthReq, res) => {
   }
 });
 
+//PATCH /api/items/:id  -- change item
 router.patch("/:id", auth, async (req: AuthReq, res) => {
   const item = await Item.findOneAndUpdate(
     { _id: req.params.id, seller: req.userId },
@@ -59,6 +63,7 @@ router.patch("/:id", auth, async (req: AuthReq, res) => {
   res.json(item);
 });
 
+//DELETE /api/items/:id  -- delte item
 router.delete("/:id", auth, async (req: AuthReq, res) => {
   const item = await Item.findOneAndDelete({ _id: req.params.id, seller: req.userId });
   if (!item) return res.status(404).json({ error: "Not found or not owner" });

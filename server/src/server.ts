@@ -8,6 +8,7 @@ import express from "express";
 import morgan from "morgan";
 import authRouter from "./routes/auth";
 import itemsRouter from "./routes/item";
+import favoritesRouter from "./routes/favorite";
 import { connectDB } from "./utils/db";
 
 const app = express();
@@ -18,9 +19,10 @@ app.use(morgan("dev"));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
+console.log("[server] mounting /api/auth");
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
-app.use("/api/auth", authRouter);
+app.use("/api/favorites", favoritesRouter);
 
 const PORT = Number(process.env.PORT ?? 4000);
 

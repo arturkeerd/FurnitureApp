@@ -1,11 +1,12 @@
+import argon2 from "argon2";
 import { Router } from "express";
+import jwt from "jsonwebtoken";
 import { auth, AuthReq } from "../middleware/auth";
 import { User } from "../models/User";
-import argon2 from "argon2";
-import jwt from "jsonwebtoken";
 
 const router = Router();
 
+//POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body as { name: string; email: string; password: string };
@@ -24,6 +25,28 @@ router.post("/register", async (req, res) => {
   }
 });
 
+// GET /api/auth/
+router.get("/", async (req: AuthReq, res) => {
+  try {
+    const users = await User.find({}, { name: 1, email: 1, createdAt: 1, updatedAt: 1 })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json(users);
+  } catch (err) {
+    console.error("GET /users error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+//GET /api/auth/me
+router.get("/me", auth, async (req: AuthReq, res) => {
+  const user = await User.findById(req.userId).select("_id name email");
+  if (!user) return res.status(404).json({ error: "User not found" });
+  res.json({ id: user._id.toString(), name: user.name, email: user.email });
+});
+
+//POST /api/auth/login
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body as { email: string; password: string };
@@ -38,12 +61,6 @@ router.post("/login", async (req, res) => {
   } catch (e: any) {
     res.status(500).json({ error: e.message });
   }
-});
-
-router.get("/me", auth, async (req: AuthReq, res) => {
-  const user = await User.findById(req.userId).select("_id name email");
-  if (!user) return res.status(404).json({ error: "User not found" });
-  res.json({ id: user._id.toString(), name: user.name, email: user.email });
 });
 
 export default router;

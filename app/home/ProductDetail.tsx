@@ -114,8 +114,8 @@ export default function ProductDetail() {
           { height: FOOTER_H + insets.bottom, paddingBottom: insets.bottom },
         ]}
       >
-        <Pressable style={styles.favouritesButton} accessibilityLabel="Add to favourites">
-          <Image source={require("@/assets/images/favourites-active.png")} style={styles.favouritesIcon} contentFit="contain" />
+        <Pressable style={styles.favoritesButton} accessibilityLabel="Add to favorites">
+          <Image source={require("@/assets/images/favorites-active.png")} style={styles.favoritesIcon} contentFit="contain" />
         </Pressable>
 
         <Pressable style={styles.contactSeller}>
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     gap: 5,
     width: "100%",
   },
-  favouritesButton: {
+  favoritesButton: {
     marginTop: 20,
     backgroundColor: Colors.extraLightGrey,
     paddingVertical: 15,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
   },
-  favouritesIcon: {
+  favoritesIcon: {
     width: 30,
     height: 30,
   },

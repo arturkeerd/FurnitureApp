@@ -10,8 +10,8 @@ export default function Footer() {
     const handleHome = () => {
         router.push ("/home/Home");
     };
-    const handleFavourites = () => {
-        router.push ("/home/Favourites");
+    const handleFavorites = () => {
+        router.push ("/home/Favorites");
     };
     const handleUser = () => {
         router.push ("/home/Profile");
@@ -27,13 +27,13 @@ export default function Footer() {
                     : require("@/assets/images/home.png")}
             />
             </Pressable>
-            <Pressable hitSlop={20} onPress={handleFavourites}>
+            <Pressable hitSlop={20} onPress={handleFavorites}>
             <Image
-                style={styles.favourites}
+                style={styles.favorites}
                 source={
-                    activePage === "Favourites"
-                    ? require("@/assets/images/favourites-active.png")
-                    : require("@/assets/images/favourites.png")}
+                    activePage === "Favorites"
+                    ? require("@/assets/images/favorites-active.png")
+                    : require("@/assets/images/favorites.png")}
             />
             </Pressable>
             <Pressable hitSlop={20} onPress={handleUser}>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         height: 30,
         left: 20,
     },
-    favourites: {
+    favorites: {
         width: 30,
         height: 34,
     },
