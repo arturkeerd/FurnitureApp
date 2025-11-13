@@ -2,7 +2,7 @@ import FavoriteItem, { FavItem } from "@/components/ui/FavoriteItem";
 import { API_URL } from "@/constants/config";
 import { getToken } from "@/utils/token";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, View, Text , StyleSheet } from "react-native";
+import { FlatList, View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
@@ -14,17 +14,29 @@ export default function FavoriteScreen() {
     const token = await getToken();
     if (!token) return;
 
-    const res = await fetch(`${API_URL}/api/favorites`, {
+    // 1) who am I?
+    const meRes = await fetch(`${API_URL}/api/auth/me`, {
       headers: { Authorization: `Bearer ${token}` },
     });
+    if (!meRes.ok) throw new Error(`Auth check failed: ${meRes.status}`);
+    const me: { id: string } = await meRes.json();
 
-    if (!res.ok) {
-      // 404 here means wrong URL/port or route not mounted
-      throw new Error(`HTTP ${res.status}`);
-    }
+    // 2) fetch favorites by userId (your backend expects this)
+    const res = await fetch(`${API_URL}/api/favorites?userId=${me.id}`);
+    
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const items: FavItem[] = await res.json();
-    setData(items);
+    const apiResponse = await res.json();
+
+    const mapped: FavItem[] = apiResponse.map((f: any) => ({
+      _id: f._id,
+      title: f.itemId?.name ?? "",
+      price: f.itemId?.price ?? "",
+      image: f.itemId?.image,
+      images: f.itemId?.images,
+    }));
+
+    setData(mapped);
   }, []);
 
   useEffect(() => { load(); }, [load]);
@@ -43,7 +55,7 @@ export default function FavoriteScreen() {
 
   return (
     <SafeAreaView style={style.container}>
-          <Header title="Favorites" />
+      <Header title="Favorites" />
       <FlatList
         data={data}
         keyExtractor={(i) => i._id}
@@ -53,18 +65,22 @@ export default function FavoriteScreen() {
         ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         contentContainerStyle={{ paddingVertical: 12 }}
         ListEmptyComponent={
-          <View style={{ padding: 40, alignItems: "center" }}>
+          <View style={style.box}>
             <Text style={{ fontSize: 16, color: "#777" }}>No favorites yet</Text>
           </View>
         }
       />
-      <Footer/>
+      <Footer />
     </SafeAreaView>
   );
 }
 
-const style = StyleSheet.create ({
-  container: {
-    flex: 1,
-  }
+const style = StyleSheet.create({
+  container: { 
+    flex: 1 
+  },
+  box: {
+    padding: 40, 
+    alignItems: "center" 
+  },
 });

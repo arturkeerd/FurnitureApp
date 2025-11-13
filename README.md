@@ -8,12 +8,16 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
    ```bash
    npm install
+   mongodb
+   mongoose
    ```
 
 2. Start the app
 
    ```bash
-   npx expo start
+   npx expo start  --  frontend startup
+   mongosh  --  to query through terminal
+   npm run server:dev  --  backend startup
    ```
 
 In the output, you'll find options to open the app in a

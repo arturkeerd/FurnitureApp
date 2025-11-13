@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+console.log(
+  `[db] connected → ${mongoose.connection.host}/${mongoose.connection.name}`
+);
 
 export async function connectDB() {
   const uri = process.env.MONGO_URL;
@@ -11,7 +14,7 @@ export async function connectDB() {
   });
 
   mongoose.connection.on("connected", () => {
-    console.log("MongoDB connected");
+    console.log(`[db] connected → ${mongoose.connection.host}/${mongoose.connection.name}`);
   });
   mongoose.connection.on("error", (err) => {
     console.error("MongoDB error:", err);

@@ -1,47 +1,43 @@
 import { Router } from "express";
+import { Types } from "mongoose";
 import { auth, AuthReq } from "../middleware/auth";
 import { Favorite } from "../models/Favorite";
-import { Item } from "../models/Item";
 
 const router = Router();
-console.log("✅ favorites router LOADED");
 
-//GET /api/favorites/  -- all items
-router.get("/", auth, async (req: AuthReq, res) => {
-  const favs = await Favorite.find({ userId: req.userId })
-    .populate("itemId") // return full item details
+// GET /api/favorites?userId=...
+router.get("/", async (req, res) => {
+  const userId = String(req.query.userId || "");
+  console.log("[GET /favorites]", { userId });
+  if (!userId) return res.status(400).json({ error: "Missing userId" });
+  if (!Types.ObjectId.isValid(userId)) return res.status(400).json({ error: "Invalid userId" });
+
+  const favorites = await Favorite.find({ userId })
+    .populate("itemId")      // <-- note the new field name
     .lean();
 
-  res.json(favs.map(f => f.itemId));
+  return res.json(favorites);
 });
 
-//POST /api/favorites/:itemId  -- one item
+// POST /api/favorites/:itemId
 router.post("/:itemId", auth, async (req: AuthReq, res) => {
-  try {
-    const fav = await Favorite.create({
-      userId: req.userId,
-      itemId: req.params.itemId,
-    });
+  const { itemId } = req.params;
+  console.log("[POST /favorites]", { userId: req.userId, itemId });
+  if (!Types.ObjectId.isValid(itemId)) return res.status(400).json({ error: "Invalid itemId" });
 
-    res.status(201).json(fav);
+  try {
+    const fav = await Favorite.create({ userId: req.userId, itemId });
+    return res.status(201).json(fav);
   } catch (e: any) {
-    // duplicate favorite -> ignore and return OK
-    if (e.code === 11000) {
-      return res.json({ ok: true, msg: "Already favorited" });
-    }
-    res.status(400).json({ error: e.message });
+    if (e.code === 11000) return res.json({ ok: true, msg: "Already favorited" });
+    return res.status(400).json({ error: e.message });
   }
 });
 
-
-//DELETE /api/favorites/:itemId  -- delete item
+// DELETE /api/favorites/:itemId
 router.delete("/:itemId", auth, async (req: AuthReq, res) => {
-  await Favorite.findOneAndDelete({
-    userId: req.userId,
-    itemId: req.params.itemId,
-  });
-
-  res.json({ ok: true });
+  await Favorite.findOneAndDelete({ userId: req.userId, itemId: req.params.itemId });
+  return res.json({ ok: true });
 });
 
 export default router;

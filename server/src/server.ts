@@ -19,9 +19,11 @@ app.use(morgan("dev"));
 
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
-console.log("[server] mounting /api/auth");
+console.log("[server]s mounting /api/auth");
 app.use("/api/auth", authRouter);
 app.use("/api/items", itemsRouter);
+
+console.log("test for whether favorites mount correctly")
 app.use("/api/favorites", favoritesRouter);
 
 const PORT = Number(process.env.PORT ?? 4000);

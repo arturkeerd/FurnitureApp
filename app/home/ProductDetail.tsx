@@ -7,6 +7,7 @@ import { Image } from "expo-image";
 import Colors from "@/constants/Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { API_URL } from "@/constants/config";
+import { getToken } from "@/utils/token";
 
 type Item = {
   _id: string;
@@ -114,8 +115,30 @@ export default function ProductDetail() {
           { height: FOOTER_H + insets.bottom, paddingBottom: insets.bottom },
         ]}
       >
-        <Pressable style={styles.favoritesButton} accessibilityLabel="Add to favorites">
-          <Image source={require("@/assets/images/favorites-active.png")} style={styles.favoritesIcon} contentFit="contain" />
+        <Pressable
+          style={styles.favoritesButton}
+          accessibilityLabel="Add to favorites"
+          onPress={async () => {
+            const token = await getToken();
+            if (!token || !id) return;
+
+            const res = await fetch(`${API_URL}/api/favorites/${id}`, {
+              method: "POST",
+              headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (res.ok) {
+              console.log("✅ Added to favorites");
+            } else {
+              console.warn("❌ Failed to add favorite", await res.text());
+            }
+          }}
+        >
+          <Image
+            source={require("@/assets/images/favorites-active.png")}
+            style={styles.favoritesIcon}
+            contentFit="contain"
+          />
         </Pressable>
 
         <Pressable style={styles.contactSeller}>

@@ -27,6 +27,7 @@ router.post("/register", async (req, res) => {
 
 // GET /api/auth/
 router.get("/", async (req: AuthReq, res) => {
+  console.log("HIT GET /api/auth/");
   try {
     const users = await User.find({}, { name: 1, email: 1, createdAt: 1, updatedAt: 1 })
       .sort({ createdAt: -1 })
@@ -41,6 +42,7 @@ router.get("/", async (req: AuthReq, res) => {
 
 //GET /api/auth/me
 router.get("/me", auth, async (req: AuthReq, res) => {
+  console.log("HIT GET /api/auth/me");
   const user = await User.findById(req.userId).select("_id name email");
   if (!user) return res.status(404).json({ error: "User not found" });
   res.json({ id: user._id.toString(), name: user.name, email: user.email });
