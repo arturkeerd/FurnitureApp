@@ -35,8 +35,16 @@ router.post("/:itemId", auth, async (req: AuthReq, res) => {
 });
 
 // DELETE /api/favorites/:itemId
-router.delete("/:itemId", auth, async (req: AuthReq, res) => {
-  await Favorite.findOneAndDelete({ userId: req.userId, itemId: req.params.itemId });
+router.delete("/:favoriteId", auth, async (req: AuthReq, res) => {
+  const deleted = await Favorite.findOneAndDelete({
+    _id: req.params.favoriteId,  // <-- match _id
+    userId: req.userId,          // safety: only delete your own
+  });
+
+  if (!deleted) {
+    return res.status(404).json({ ok: false, error: "Favorite not found" });
+  }
+
   return res.json({ ok: true });
 });
 
