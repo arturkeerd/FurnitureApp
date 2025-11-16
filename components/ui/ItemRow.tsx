@@ -48,7 +48,7 @@ export default function ItemRow({ item, onPress, onAction }: ItemRowProps) {
         <Text numberOfLines={1} style={styles.title}>
           {item.title}
         </Text>
-        <Text style={styles.price}>$ {String(item.price)}</Text>
+        <Text style={styles.price}>€ {String(item.price)}</Text>
       </View>
 
       <TouchableOpacity onPress={onAction}>

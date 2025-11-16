@@ -1,6 +1,6 @@
 export const categories = [
   {
-    title: "Popular",
+    title: "All",
     image: require('@/assets/images/catall.png'),
   },
   {

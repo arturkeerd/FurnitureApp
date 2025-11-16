@@ -15,7 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 
 
 const toCatKey = (s: string) => s.trim().toLowerCase();
-const selectableCategories = categories.filter((c) => c.title !== "Popular");
+const selectableCategories = categories.filter((c) => c.title !== "All");
 
 function ImageThumb({
   uri,

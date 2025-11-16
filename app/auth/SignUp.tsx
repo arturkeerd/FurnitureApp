@@ -28,48 +28,84 @@ export default function SignUp() {
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [fieldErrors, setFieldErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
   const goBack = () => router.push("/");
   const google = () => router.push("/"); // TODO: wire later
   const signIn = () => router.push("/auth/SignIn");
 
   const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert("Missing fields", "Please fill name, email and password.");
-      return;
-    }
-    if (!checked) {
-      Alert.alert("Agree to terms", "Please agree to the Terms & Privacy to continue.");
-      return;
-    }
+    setFieldErrors({ name: "", email: "", password: "" });
 
-    try {
-      setLoading(true);
-      console.log("Sending:", { name, email, password, API_URL });
-      const res = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, password }),
-      });
+      let hasError = false;
 
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        const msg = data?.error || `Registration failed (${res.status})`;
-        Alert.alert("Error", msg);
-        return;
+      // name
+      if (!name.trim()) {
+        hasError = true;
+        setFieldErrors((prev) => ({ ...prev, name: "Name is required." }));
       }
 
-      // Optionally store token in secure storage here
-      // await SecureStore.setItemAsync("token", data.token);
+      // email
+      if (!email.trim()) {
+        hasError = true;
+        setFieldErrors((prev) => ({ ...prev, email: "Email is required." }));
+      } else {
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+          hasError = true;
+          setFieldErrors((prev) => ({ ...prev, email: "Please enter a valid email." }));
+        }
+      }
 
-      Alert.alert("Success", "Account created. Please sign in.");
-      router.push("/auth/SignIn");
-    } catch (err: any) {
-      Alert.alert("Network error", err?.message ?? "Could not reach server");
-    } finally {
-      setLoading(false);
-    }
-  };
+      // password
+      if (!password.trim()) {
+        hasError = true;
+        setFieldErrors((prev) => ({ ...prev, password: "Password is required." }));
+      } else if (password.length < 6) {
+        hasError = true;
+        setFieldErrors((prev) => ({
+          ...prev,
+          password: "Password must be at least 6 characters.",
+        }));
+      }
 
+      if (!checked) {
+        Alert.alert("Agree to terms", "Please agree to the Terms & Privacy to continue.");
+        // not a field error, just keep the alert
+      }
+
+      // Abort if any field failed
+      if (hasError || !checked) return;
+
+      // 🔽 your existing submit logic unchanged
+      try {
+        setLoading(true);
+        const res = await fetch(`${API_URL}/api/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const msg = data?.error || `Registration failed (${res.status})`;
+          Alert.alert("Error", msg);
+          return;
+        }
+
+        Alert.alert("Success", "Account created. Please sign in.");
+        router.push("/auth/SignIn");
+      } catch (err: any) {
+        Alert.alert("Network error", err?.message ?? "Could not reach server");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
   return (
     <MainView>
       <View style={styles.headerContainer}>
@@ -77,27 +113,49 @@ export default function SignUp() {
       </View>
 
       <View style={styles.container}>
-        <Input
-          label="Name"
-          placeholder="John Doe"
-          value={name}
-          onChangeText={setName}
-        />
-        <Input
-          label="E-mail"
-          placeholder="example@gmail.com"
-          value={email}
-          onChangeText={setEmail}
-        />
-        <Input
-          label="Password"
-          placeholder="**********"
-          value={password}
-          onChangeText={setPassword}
-          isPassword
-          isPasswordVisible={isPasswordVisible}
-          onEyePress={() => setIsPasswordVisible(v => !v)}
-        />
+<Input
+  label="Name"
+  placeholder="John Doe"
+  value={name}
+  onChangeText={(t) => {
+    setName(t);
+    if (fieldErrors.name) {
+      setFieldErrors((prev) => ({ ...prev, name: "" }));
+    }
+  }}
+/>
+{fieldErrors.name ? <Text style={styles.errorText}>{fieldErrors.name}</Text> : null}
+
+<Input
+  label="E-mail"
+  placeholder="example@gmail.com"
+  value={email}
+  onChangeText={(text) => {
+    setEmail(text);
+    if (fieldErrors.email) {
+      setFieldErrors((prev) => ({ ...prev, email: "" }));
+    }
+  }}
+/>
+{fieldErrors.email ? <Text style={styles.errorText}>{fieldErrors.email}</Text> : null}
+
+<Input
+  label="Password"
+  placeholder="**********"
+  value={password}
+  onChangeText={(text) => {
+    setPassword(text);
+    if (fieldErrors.password) {
+      setFieldErrors((prev) => ({ ...prev, password: "" }));
+    }
+  }}
+  isPassword
+  isPasswordVisible={isPasswordVisible}
+  onEyePress={() => setIsPasswordVisible((v) => !v)}
+/>
+{fieldErrors.password ? (
+  <Text style={styles.errorText}>{fieldErrors.password}</Text>
+) : null}
 
         <Checkbox
           style={{ maxWidth: 400, alignSelf: "center" }}
@@ -138,4 +196,13 @@ const styles = StyleSheet.create({
   dividerLine: { marginTop: 30, flex: 1, height: 1, backgroundColor: Colors.lightGrey },
   Gmail: { height: 60, width: 142, alignSelf: "center" },
   signIn: { top: 40, textAlign: "center", color: Colors.blue },
+  errorText: {
+  color: "red",
+  fontSize: 12,
+  marginTop: -16,   // pull it closer to the input if you want
+  marginBottom: 12,
+  alignSelf: "center",
+  maxWidth: 400,
+  width: "90%",
+},
 });

@@ -73,9 +73,9 @@ const Home = () => {
     };
   }, []);
 
-  // Filter by selectedCategory (string). "popular" or null -> show all.
+  // Filter by selectedCategory (string). "All" or null -> show all.
   useEffect(() => {
-    if (!selectedCategory || selectedCategory === "popular") {
+    if (!selectedCategory || selectedCategory === "All") {
       setFiltered(products);
     } else {
       setFiltered(products.filter((p) => p.category === selectedCategory));
@@ -88,7 +88,7 @@ const Home = () => {
       <CategoryBox
         title={item.title}
         image={item.image}
-        isSelected={selectedCategory === key || (!selectedCategory && key === "popular")}
+        isSelected={selectedCategory === key || (!selectedCategory && key === "All")}
         onPress={() =>
           setSelectedCategory((prev) => (prev === key ? null : key))
         }
