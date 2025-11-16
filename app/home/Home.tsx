@@ -1,4 +1,3 @@
-// app/(tabs)/Home.tsx
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Dimensions, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -163,10 +162,11 @@ const styles = StyleSheet.create({
   },
   productGrid: { 
     gap: 20,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent:"center",
     paddingHorizontal: 10, 
-    paddingBottom: 80 
+    paddingBottom: 80,
+    paddingLeft: 15,
   },
   status: { 
     paddingHorizontal: 16, 

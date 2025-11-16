@@ -1,13 +1,19 @@
-import FavoriteItem, { FavItem } from "@/components/ui/FavoriteItem";
-import { API_URL } from "@/constants/config";
-import { getToken } from "@/utils/token";
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+
+import ItemRow, { ItemRowData } from "@/components/ui/ItemRow";
+import { API_URL } from "@/constants/config";
+import { getToken } from "@/utils/token";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import Colors from "@/constants/Colors";
-import { useRouter } from "expo-router";
+
+type FavItem = ItemRowData & {
+  _id: string;          // favorite doc id
+  productId: string;    // actual Item _id
+};
 
 export default function FavoriteScreen() {
   const [data, setData] = useState<FavItem[]>([]);
@@ -29,8 +35,8 @@ export default function FavoriteScreen() {
     const apiResponse = await res.json();
 
     const mapped: FavItem[] = apiResponse.map((f: any) => ({
-      _id: String(f._id),                   // favorite id(not product id) (for DELETE)
-      productId: String(f.itemId?._id ?? ""), // actual product id
+      _id: String(f._id),
+      productId: String(f.itemId?._id ?? ""),
       title: f.itemId?.name ?? "",
       price: f.itemId?.price ?? "",
       image: f.itemId?.image,
@@ -57,27 +63,27 @@ export default function FavoriteScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={style.container}>
+    <SafeAreaView style={styles.container}>
       <Header title="Favorites" />
       <FlatList
         data={data}
         keyExtractor={(i) => i._id}
         renderItem={({ item }) => (
-          <FavoriteItem
+          <ItemRow
             item={item}
             onPress={() =>
               router.push({
                 pathname: "/home/ProductDetail",
-                params: { id: item.productId },   
+                params: { id: item.productId },
               })
             }
-            onRemove={remove}
+            onAction={() => remove(item._id)}
           />
         )}
-        ItemSeparatorComponent={() => <View style={style.separator} />}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
-          <View style={style.box}>
-            <Text style={style.noItems}>No favorites yet</Text>
+          <View style={styles.box}>
+            <Text style={styles.noItems}>No favorites yet</Text>
           </View>
         }
       />
@@ -86,21 +92,9 @@ export default function FavoriteScreen() {
   );
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.background,
-  },
-  box: {
-    paddingVertical: 40,
-    alignItems: "center",
-  },
-  separator: {
-    height: 2,
-    backgroundColor: "#f4f4f4ff",
-  },
-  noItems: {
-    fontSize: 16,
-    color: "#777",
-  },
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: Colors.background },
+  box: { paddingVertical: 40, alignItems: "center" },
+  separator: { height: 2, backgroundColor: "#f4f4f4ff" },
+  noItems: { fontSize: 16, color: "#777" },
 });

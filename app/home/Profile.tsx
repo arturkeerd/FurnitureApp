@@ -1,18 +1,40 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import MainView from "@/constants/MainView";
-import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
-import Colors from "@/constants/Colors";
+import Header from "@/components/ui/Header";
 import ProfileNavButton from "@/components/ui/ProfileNavButton";
-import { useUser, UserProvider, } from "@/hooks/UserContext";
+import Colors from "@/constants/Colors";
+import { API_URL } from "@/constants/config";
+import MainView from "@/constants/MainView";
+import { useUser } from "@/hooks/UserContext";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Profile() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user, loading, logout } = useUser();
+  const [myListingCount, setMyListingCount] = useState(0);
+
+  useEffect(() => {
+  const loadListings = async () => {
+    if (!user?.id) {
+      setMyListingCount(0);
+      return;
+    }
+
+    const res = await fetch(`${API_URL}/api/items?seller=${user.id}`);
+    if (!res.ok) {
+      console.warn("Failed to load my listings count", res.status);
+      return;
+    }
+
+    const items = await res.json();
+    setMyListingCount(items.length);
+  };
+
+  loadListings();
+}, [user?.id]);
 
   return (
     <MainView
@@ -40,8 +62,8 @@ export default function Profile() {
         <View style={styles.cards}>
           <ProfileNavButton
             title="My Listings"
-            subtitle="Already have 10 listing"
-            onPress={() => router.push("/home/MyListings")}
+            subtitle={`Already have ${myListingCount} listings`}
+            onPress={() => router.push({pathname: "/home/MyListings",})}
           />
           <View style={{ height: 12 }} />
           <ProfileNavButton
@@ -78,14 +100,15 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   name: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "600",
     color: Colors.black,
-    marginBottom: 4,
+    marginBottom: 10,
   },
   email: {
-    fontSize: 13,
-    color: Colors.grey,
+    fontSize: 14,
+    color: '#808080',
+    marginBottom: 10,
   },
   // Cards
   cards: {

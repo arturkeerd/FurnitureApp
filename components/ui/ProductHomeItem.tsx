@@ -28,7 +28,7 @@ const ProductHomeItem = ({ title, price, imageUrl, onPress }: ProductHomeItemPro
       <Image source={source} style={styles.image} resizeMode="cover" />
       </View>
       <Text style={styles.title} numberOfLines={2}>{title}</Text>
-      <Text style={styles.price} numberOfLines={1}>{price}</Text>
+      <Text style={styles.price} numberOfLines={1}>€ {price}</Text>
     </TouchableOpacity>
   );
 };

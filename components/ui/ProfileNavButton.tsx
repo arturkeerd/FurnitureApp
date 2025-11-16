@@ -35,18 +35,19 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   title: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "600",
-    color: Colors.black ,
+    color: Colors.blue ,
   },
   subtitle: {
     marginTop: 4,
     fontSize: 12,
-    color: Colors.grey ,
+    color: '#808080' ,
   },
   chevron: {
-    fontSize: 26,
+    fontSize: 40,
     lineHeight: 26,
-    color: Colors.grey ,
+    fontWeight: 300,
+    color: Colors.blue ,
   },
 });

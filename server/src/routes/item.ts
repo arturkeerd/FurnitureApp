@@ -6,8 +6,21 @@ import { User } from "../models/User";
 const router = Router();
 
 //GET /api/items/  -- all items
-router.get("/", async (_req, res) => {
-  const items = await Item.find().sort({ createdAt: -1 }).limit(100).lean();
+router.get("/", async (req, res) => {
+  const seller = typeof req.query.seller === "string" ? req.query.seller : undefined;
+
+  const filter: any = {};
+  if (seller) {
+    filter.seller = seller;             // <-- THIS is the comparison
+  }
+
+  console.log("[GET /items]", { seller, filter });
+
+  const items = await Item.find(filter)
+    .sort({ createdAt: -1 })
+    .limit(100)
+    .lean();
+
   res.json(items);
 });
 

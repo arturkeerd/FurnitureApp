@@ -1,5 +1,15 @@
 import React from "react";
-import { View, Text, TextInput, Image, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  Pressable,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import Colors from "@/constants/Colors";
 
 export type InputProps = {
@@ -10,6 +20,9 @@ export type InputProps = {
   isPassword?: boolean;
   isPasswordVisible?: boolean;
   onEyePress?: () => void;
+  style?: StyleProp<TextStyle>;          // TextInput style
+  containerStyle?: StyleProp<ViewStyle>; // outer box style
+  multiline?: boolean;
 };
 
 function Input({
@@ -20,17 +33,23 @@ function Input({
   isPassword,
   isPasswordVisible,
   onEyePress,
+  style,
+  containerStyle,
+  multiline,
 }: InputProps) {
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, containerStyle]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, style]}
           placeholder={placeholder}
+          placeholderTextColor={Colors.lightGrey}
           value={value}
           onChangeText={onChangeText}
           secureTextEntry={isPassword && !isPasswordVisible}
+          multiline={multiline}
+          textAlignVertical={multiline ? "top" : "center"}
         />
         {isPassword && (
           <Pressable onPress={onEyePress} style={styles.eyeButton}>
@@ -55,14 +74,14 @@ export default Input;
 const styles = StyleSheet.create({
   container: {
     marginBottom: 24,
-    width: '100%',
+    width: "100%",
     alignSelf: "center",
   },
   label: {
     fontSize: 14,
     color: Colors.blue,
     marginBottom: 8,
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
     alignSelf: "center",
     fontWeight: "500",
@@ -75,15 +94,15 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingHorizontal: 16,
     backgroundColor: Colors.background,
-    height: 60,
-    width: '100%',
+    height: 60,          // default; can be overridden via containerStyle
+    width: "100%",
     maxWidth: 400,
     minWidth: 200,
   },
   input: {
     flex: 1,
     fontSize: 16,
-    color: Colors.lightGrey,
+    color: Colors.black,
     paddingVertical: 16,
   },
   eyeButton: {
