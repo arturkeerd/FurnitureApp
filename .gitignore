@@ -3,6 +3,12 @@
 # dependencies
 node_modules/
 
+# app
+.gitignore
+.env
+*.env
+.vscode/
+
 # Expo
 .expo/
 dist/

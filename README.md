@@ -1,24 +1,36 @@
-# Welcome to your Expo app 👋
+# Welcome to my Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
 ## Get started
 
 1. Install dependencies
-
+   Frontend: 
    ```bash
    npm install
-   mongodb
-   mongoose
+   expo install expo-image-picker expo-secure-store expo-constants react-native-gesture-handler react-native-reanimated react-native-screens react-native-safe-area-context @expo/vector-icons
+   ```
+   Backend:
+   ```bash
+   npm install express cors mongoose dotenv argon2 jsonwebtoken cookie-parser morgan
    ```
 
 2. Start the app
-
+   Frontend:
    ```bash
-   npx expo start  --  frontend startup
-   mongosh  --  to query through terminal
-   npm run server:dev  --  backend startup
+   npx expo start
    ```
+   Backend:
+   ```bash
+   npm run server:dev
+   ```
+   Database:
+   ```bash
+   mongosh
+   ```
+
+3. Look at your console and open it in localhost:<your router address>
+
 
 In the output, you'll find options to open the app in a
 
@@ -31,7 +43,7 @@ You can start developing by editing the files inside the **app** directory. This
 
 ## Get a fresh project
 
-When you're ready, run:
+If you want to start your own project, run:
 
 ```bash
 npm run reset-project
